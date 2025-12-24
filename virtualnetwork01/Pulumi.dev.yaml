@@ -1,0 +1,39 @@
+encryptionsalt: v1:ZpDu/T/YNZc=:v1:pIjzh4PJ4f38EpeR:nkrkGl6dL+76GZYW8EFL+jAqe2ZZvA==
+
+config:
+  pulumi:autonaming:
+    mode: disabled
+  azure-native:location: swedencentral
+  azure-native:subscriptionId: 64854628-b6d8-431f-b2a6-13596afbfabb
+  param:env: dev
+  param:tags:
+    environment: dev
+    managed-by: pulumi
+
+  param:rgVnetName: rg-pulumi-vnet-dev-01
+  param:vnetName: vnet-dev-01
+  
+  param:dnszones:
+    - privatelink.blob.core.windows.net
+    - privatelink.table.core.windows.net
+
+  param:addressPrefixes: 
+    - 10.100.0.0/16
+    - 10.200.0.0/16
+
+  param:subnets:
+    - snetName: web
+      prefix: 10.100.1.0/24
+      serviceEndpoints: 
+        - Microsoft.Web
+        - Microsoft.Sql
+    - snetName: app
+      prefix: 10.100.2.0/24
+    - snetName: db
+      prefix: 10.100.3.0/24
+      privateEndpointNetworkPolicies: Disabled
+      privateLinkServiceNetworkPolicies: Disabled
+    - snetName: pep
+      prefix: 10.100.4.0/24
+      privateEndpointNetworkPolicies: Enabled
+      privateLinkServiceNetworkPolicies: Enabled
