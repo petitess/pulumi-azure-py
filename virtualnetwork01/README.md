@@ -13,9 +13,6 @@ pulumi preview --diff --neo
 pulumi up --yes --diff --neo
 pulumi state delete <URN>
 pulumi destroy --stack prod
-dotnet add package Pulumi.AzureNative
-dotnet add package Pulumi.Command
-dotnet add package YamlDotNet 
 ```
 ## Environment variables
 ```pwsh
@@ -24,4 +21,5 @@ $env:AZURE_SUBSCRIPTION_ID = "11111111-1111-1111-1111-111111111111"
 $env:AZURE_TENANT_ID       = "22222222-2222-2222-2222-222222222222"  # optional
 $env:AZURE_CLIENT_ID       = "..."   # only if using service principal
 $env:AZURE_CLIENT_SECRET   = "..."   # only if using service principal
+
 ```
