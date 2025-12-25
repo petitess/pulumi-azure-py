@@ -12,12 +12,33 @@ config:
 
   param:rgVnetName: rg-pulumi-vnet-dev-01
   param:vnetName: vnet-dev-01
+  param:amplIp: 10.100.4.10
+  param:plsIps: 
+    api: 10.100.4.11
+    global.in.ai: 10.100.4.12
+    profiler: 10.100.4.13
+    live: 10.100.4.14
+    diagservicesquery: 10.100.4.15
+    snapshot: 10.100.4.16
+    agentsolutionpackstore: 10.100.4.17
+    dce-global: 10.100.4.18
+    swedencentral-5.in.ai: 10.100.4.19
+    swedencentral.live: 10.100.4.20
+    oms-swedencentral: 10.100.4.21
+    ods-swedencentral: 10.100.4.22
+    agent-swedencentral: 10.100.4.23
+  param:mgRootId: 52658ee1-97c1-4c2b-9a34-f177ebda5098
   
   param:dnszones:
     - privatelink.blob.core.windows.net
     - privatelink.table.core.windows.net
     - privatelink.queue.core.windows.net
     - privatelink.file.core.windows.net
+    - privatelink.azure.com
+    - privatelink.monitor.azure.com
+    - privatelink.ods.opinsights.azure.com
+    - privatelink.oms.opinsights.azure.com
+    - privatelink.agentsvc.azure-automation.net
 
   param:addressPrefixes: 
     - 10.100.0.0/16

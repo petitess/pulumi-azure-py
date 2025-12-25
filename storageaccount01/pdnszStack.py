@@ -4,8 +4,8 @@ import vnetStack
 
 config = pulumi.Config("param")
 env = config.require("env")
-rg_vnet_name = config.require("rgVnetName")
-vnet_name = config.require("vnetName")
+rg_vnet_name = vnetStack.resource_group.name
+vnet_name = vnetStack.vnet.name 
 tags = config.require_object("tags")
 dnszones = config.require_object("dnszones")
 

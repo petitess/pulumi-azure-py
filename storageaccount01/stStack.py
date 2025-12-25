@@ -3,10 +3,12 @@ import pulumi_azure_native.resources as resources
 import pulumi_azure_native.storage as storage
 import pulumi_azure_native.network as network
 import pulumi_azure_native.authorization as authorization
+import pulumi_azure_native.monitor as monitor
 import vnetStack
 import pdnszStack
 import guid
 import rbacRole
+import monitorStack
 
 config = pulumi.Config("param")
 env = config.require("env")
@@ -41,6 +43,21 @@ for s in storageAccounts:
             "default_action": storage.DefaultAction.DENY,
             "ip_rules": ipRules,
         },
+    )
+
+    blob = storage.BlobContainer(
+        resource_name=f"container-{s["name"]}",
+        container_name="container",
+        account_name=st.name,
+        resource_group_name=s.get("rgName", resource_group.name),
+    )
+
+    blob_diag = monitor.DiagnosticSetting(
+        resource_name=s["name"],
+        name=s["name"],
+        resource_uri=st.id.apply(lambda x: f"{x}/blobservices/default"),
+        workspace_id=monitorStack.log.id,
+        logs=[monitor.LogSettingsArgs(category="StorageRead", enabled=True)],
     )
 
     for p, ip in s.get("privateEndpoints", {}).items():
