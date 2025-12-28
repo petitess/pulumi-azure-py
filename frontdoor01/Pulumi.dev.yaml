@@ -1,0 +1,127 @@
+encryptionsalt: v1:RexkeoKyrZc=:v1:VEetXqnlD0RJB/rR:G6+AtSiTxYp9S+GvYMH5ffIl1dp1uw==
+
+config:
+  pulumi:autonaming:
+    mode: disabled
+  azure-native:location: swedencentral
+  azure-native:subscriptionId: 64854628-b6d8-431f-b2a6-13596afbfabb
+  param:env: dev
+  param:tags:
+    environment: dev
+    managed-by: pulumi
+
+  param:rgVnetName: rg-pulumi-vnet-dev-01
+  param:vnetName: vnet-dev-01
+  param:frontdoorEndpoints: 
+    - appName: "stpulumiafddev00002"
+      appFqdn: stpulumiafddev00002.z1.web.core.windows.net
+      disableCache: true
+      appGroupId: web
+      subId: 64854628-b6d8-431f-b2a6-13596afbfabb
+      appRg: rg-pulumi-st-dev-01
+      resourceType: Microsoft.Storage/storageAccounts
+      # customDomain: st.domain.se
+      # DnsZoneName: domain.se
+      rules: 
+        - name: 'CORSB2C'
+          order: 0
+          matchProcessingBehavior: 'Continue'
+          actions: 
+            - name: 'ModifyResponseHeader'
+              parameters: 
+                typeName: 'DeliveryRuleHeaderActionParameters'
+                headerAction: 'Overwrite'
+                headerName: 'Access-Control-Allow-Origin'
+                value: '*'
+      customRules: 
+        - name: 'GeolocationAndIP'
+          priority: 100
+          ruleType: 'MatchRule'
+          action: 'Block'
+          enabledState: 'Disabled'
+          matchConditions: 
+            - matchVariable: 'RemoteAddr'
+              operator: 'GeoMatch'
+              negateCondition: true
+              matchValue: 
+                - 'SE'
+      ruleGroupOverrides:
+        - ruleGroupName: 'MS-ThreatIntel-SQLI'
+          rules: 
+            - ruleId: '99031001'
+              enabledState: 'Disabled'
+            - ruleId: '99031002'
+              enabledState: 'Disabled'
+        - ruleGroupName: 'MS-ThreatIntel-WebShells'
+          rules: 
+            - ruleId: '99005002'
+              enabledState: 'Enabled'
+              exclusions: 
+                - matchVariable: 'RequestCookieNames'
+                  selectorMatchOperator: 'StartsWith'
+                  selector: '.AspNetCore.Cookies'
+    - appName: "func-frontdoor"
+      appFqdn: func-frontdoor.azurewebsites.net
+      disableCache: true
+      appGroupId: sites
+      subId: 64854628-b6d8-431f-b2a6-13596afbfabb
+      appRg: rg-func
+      resourceType: Microsoft.Web/sites 
+    - appName: "func-frontdoor1"
+      appFqdn: func-frontdoor1.azurewebsites.net
+      disableCache: true
+      appGroupId: sites
+      subId: 64854628-b6d8-431f-b2a6-13596afbfabb
+      appRg: rg-func
+      resourceType: Microsoft.Web/sites
+    - appName: "func-frontdoor2"
+      appFqdn: func-frontdoor2.azurewebsites.net
+      disableCache: true
+      appGroupId: sites
+      subId: 64854628-b6d8-431f-b2a6-13596afbfabb
+      appRg: rg-func
+      resourceType: Microsoft.Web/sites
+    - appName: "func-frontdoor3"
+      appFqdn: func-frontdoor3.azurewebsites.net
+      disableCache: true
+      appGroupId: sites
+      subId: 64854628-b6d8-431f-b2a6-13596afbfabb
+      appRg: rg-func
+      resourceType: Microsoft.Web/sites   
+    - appName: "google"
+      appFqdn: google.com  
+      disableCache: true    
+          
+  param:dnszones:
+    - privatelink.web.core.windows.net
+
+  param:addressPrefixes: 
+    - 10.100.0.0/16
+    - 10.200.0.0/16
+
+  param:subnets:
+    - snetName: web
+      prefix: 10.100.1.0/24
+      serviceEndpoints: 
+        - Microsoft.Web
+        - Microsoft.Sql
+    - snetName: app
+      prefix: 10.100.2.0/24
+    - snetName: db
+      prefix: 10.100.3.0/24
+      privateEndpointNetworkPolicies: Disabled
+      privateLinkServiceNetworkPolicies: Disabled
+    - snetName: pep
+      prefix: 10.100.4.0/24
+      privateEndpointNetworkPolicies: Enabled
+      privateLinkServiceNetworkPolicies: Enabled
+  param:storageAccounts:
+    - name: stpulumiafddev00002
+      skuName: Standard_LRS
+      publicNetworkAccess: "Enabled"
+      allowedIPs: 
+        - 1.1.1.1
+        - 2.2.2.2
+        - 188.150.118.51
+      privateEndpoints:
+        web: 10.100.4.5
