@@ -1,14 +1,17 @@
 ## Commands
 ```as
 az login
-pip install -r requirements.txt
 pulumi new azure-python -y -s dev
+pip install -r requirements.txt
+pip install pulumi_command
 pulumi login --local
 pulumi config set azure-native:location swedencentral
 pulumi stack init prod
 pulumi stack select prod
 pulumi stack export
-pulumi refresh --yes
+pulumi refresh --yes --neo 
+pulumi refresh --yes --neo --target "urn:pulumi:dev::frontdoor01::azure-native:cdn:AFDOrigin::origin-google2"
+pulumi refresh --preview-only --neo 
 pulumi preview --diff --neo
 pulumi up --yes --diff --neo
 pulumi state delete <URN>
