@@ -1,0 +1,11 @@
+encryptionsalt: v1:hVOOcojTG20=:v1:q8MFp2XCFCB9mjoi:/WQDDjauAxPE+sYL4a0HiTYNR93JAg==
+
+config:
+  pulumi:autonaming:
+    mode: disabled
+  azure-native:location: swedencentral
+  azure-native:subscriptionId: 64854628-b6d8-431f-b2a6-13596afbfabb
+  param:env: dev
+  param:tags:
+    environment: dev
+    managed-by: pulumi
