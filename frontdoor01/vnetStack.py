@@ -16,7 +16,7 @@ class SubnetConfig:
             "privateLinkServiceNetworkPolicies"
         )
         self.service_endpoints = data.get("serviceEndpoints", [])
-
+        self.delegations = data.get("delegations", [])    
 
 config = pulumi.Config("param")
 env = config.require("env")
@@ -45,7 +45,7 @@ vnet = network.VirtualNetwork(
     address_space=network.AddressSpaceArgs(address_prefixes=address_prefixes),
     tags=tags,
 )
-snet_dict = {}
+
 for snet_config_dict in subnet_configs:
     snet = SubnetConfig(snet_config_dict)
 
@@ -122,6 +122,18 @@ for snet_config_dict in subnet_configs:
         else None
     )
 
+    delegations_args = (
+        [
+            network.DelegationArgs(
+                name=srv,
+                service_name=srv,
+            )
+            for srv in snet.delegations
+        ]
+        if snet.delegations
+        else None
+    )
+
     subnet = network.Subnet(
         f"snet-{snet.snet_name}",
         subnet_name=f"snet-{snet.snet_name}",
@@ -134,5 +146,5 @@ for snet_config_dict in subnet_configs:
         network_security_group=(
             network.NetworkSecurityGroupArgs(id=nsg.id) if nsg else None
         ),
+        delegations=delegations_args,
     )
-    snet_dict[f"snet-{snet.snet_name}"] = subnet.id
